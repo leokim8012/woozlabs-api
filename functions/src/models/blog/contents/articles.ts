@@ -2,7 +2,7 @@ import { db } from '@/plugins/firebase';
 import firestore from '@google-cloud/firestore';
 import crypto from 'crypto';
 
-export class BlogArticle {
+export class BlogArticleDTO {
   constructor(
     readonly id: string,
     readonly category: string,
@@ -13,16 +13,13 @@ export class BlogArticle {
     readonly subtitle: string,
     readonly views: number,
     readonly notionUrl: string,
-    readonly createdAt: Date,
-    readonly updatedAt: Date
+    readonly createdAt?: Date,
+    readonly updatedAt?: Date
   ) {}
 }
 
-export const converter: firestore.FirestoreDataConverter<BlogArticle> = {
-  toFirestore: (
-    model: BlogArticle,
-    setOptions?: firestore.SetOptions
-  ): BlogArticle => {
+export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
+  toFirestore: (model: BlogArticleDTO, setOptions?: firestore.SetOptions) => {
     if (setOptions?.merge) {
       return Object.assign(model, {
         updatedAt: firestore.FieldValue.serverTimestamp(),
@@ -42,10 +39,12 @@ export const converter: firestore.FirestoreDataConverter<BlogArticle> = {
       updatedAt: model.updatedAt || firestore.FieldValue.serverTimestamp(),
     };
   },
-  fromFirestore: (snapshot: firestore.QueryDocumentSnapshot): BlogArticle => {
+  fromFirestore: (
+    snapshot: firestore.QueryDocumentSnapshot
+  ): BlogArticleDTO => {
     const data = snapshot.data();
 
-    return new BlogArticle(
+    return new BlogArticleDTO(
       data.id,
       data.category,
       data.imageURL,

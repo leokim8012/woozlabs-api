@@ -41,12 +41,11 @@ router
     ) => {
       if (!req.params.id) throw new Error(statusCode.BAD_REQUEST);
       requestLog(`GET ARTICLE ${req.params.id}`);
-
       try {
         const result = await articleService.getArticleById(req.params.id);
         res.json(result);
       } catch (err) {
-        console.log(err);
+        throw err;
       }
     }
   );

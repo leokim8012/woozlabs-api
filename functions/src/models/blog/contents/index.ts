@@ -1,1 +1,1 @@
-export { BlogArticle } from './articles';
+export { BlogArticleDTO } from './articles';
