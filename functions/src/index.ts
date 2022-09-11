@@ -1,12 +1,11 @@
 require('module-alias/register');
+import 'reflect-metadata';
 import * as functions from 'firebase-functions';
 import userCollection, { UserAuthentication } from '@/models/users';
 import { auth } from '@/plugins/firebase';
 import { statusCode } from '@/types/statusCode';
 
-exports.tests = functions.https.onRequest(require('@/controllers/tests'));
-exports.servers = functions.https.onRequest(require('@/controllers/servers'));
-exports.users = functions.https.onRequest(require('@/controllers/users'));
+exports.blog = functions.https.onRequest(require('@/controllers/blog'));
 
 export const createUser = functions.auth.user().onCreate(async (user) => {
   const { uid, email, providerData, displayName, photoURL, emailVerified } =
