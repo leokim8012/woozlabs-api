@@ -30,7 +30,7 @@ module.exports = (
       return res.status(503).end();
 
     case statusCode.DB_ERROR:
-      return res.statusCode(600).end();
+      return res.status(600).end();
   }
   return res.send(err.message);
 };
