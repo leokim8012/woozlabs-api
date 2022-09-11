@@ -5,57 +5,60 @@ import crypto from 'crypto';
 export class BlogArticle {
   constructor(
     readonly id: string,
-    readonly email: string,
-    readonly emailVerified: boolean,
-    readonly providerData?: string[],
-    readonly displayName?: string,
-    readonly photoURL?: string,
-    readonly level?: number,
-    readonly createdAt?: Date,
-    readonly updatedAt?: Date,
-    readonly visitedAt?: Date,
-    readonly deviceModel?: string,
-    readonly deviceName?: string,
-    readonly deviceOS?: string
+    readonly category: string,
+    readonly imageURL: string,
+    readonly filePath: string,
+    readonly author: string,
+    readonly title: string,
+    readonly subtitle: string,
+    readonly views: number,
+    readonly notionUrl: string,
+    readonly createdAt: Date,
+    readonly updatedAt: Date
   ) {}
 }
 
-export const converter: firestore.FirestoreDataConverter<UserAuthentication> = {
+export const converter: firestore.FirestoreDataConverter<BlogArticle> = {
   toFirestore: (
-    model: UserAuthentication,
+    model: BlogArticle,
     setOptions?: firestore.SetOptions
-  ) => {
+  ): BlogArticle => {
     if (setOptions?.merge) {
       return Object.assign(model, {
         updatedAt: firestore.FieldValue.serverTimestamp(),
       });
     }
-    const hash = crypto.createHash('md5').update(model.email).digest('hex');
     return {
-      email: model.email,
-      providerData: model.providerData || [],
-      displayName: model.displayName || '',
-      level: model.level || 3,
-      photoURL: model.photoURL || `https://www.gravatar.com/avatar/${hash}.jpg`,
+      id: model.id,
+      category: model.category,
+      author: model.author,
+      filePath: model.filePath,
+      imageURL: model.imageURL,
+      notionUrl: model.notionUrl,
+      title: model.title,
+      subtitle: model.subtitle,
+      views: model.views || 0,
       createdAt: model.createdAt || firestore.FieldValue.serverTimestamp(),
       updatedAt: model.updatedAt || firestore.FieldValue.serverTimestamp(),
     };
   },
-  fromFirestore: (snapshot: firestore.QueryDocumentSnapshot) => {
+  fromFirestore: (snapshot: firestore.QueryDocumentSnapshot): BlogArticle => {
     const data = snapshot.data();
 
-    let photoURL = data.photoURL || '';
-    if (photoURL.includes('gravatar')) photoURL += '?d=identicon';
-    return new UserAuthentication(
-      data.email,
-      data.providerData,
-      data.displayName,
-      data.level,
-      photoURL,
+    return new BlogArticle(
+      data.id,
+      data.category,
+      data.imageURL,
+      data.filePath,
+      data.author,
+      data.title,
+      data.subtitle,
+      data.views,
+      data.notionUrl,
       data.createdAt.toDate(),
       data.updatedAt.toDate()
     );
   },
 };
 
-export default db.collection('users').withConverter(converter);
+export default db.collection('articles').withConverter(converter);

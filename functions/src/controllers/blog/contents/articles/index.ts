@@ -15,21 +15,21 @@ const router = express.Router();
 // middlewares
 
 router.use(cors({ origin: true }));
-router
-  .route('/')
-  .get(
-    async (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ) => {
-      requestLog(`GET ARTICLE COLLECTION`);
-      const result = await articleService
-        .getArticleCollection()
-        .catch((err) => next(err));
-      res.json(result);
-    }
-  );
+// router
+//   .route('/')
+//   .get(
+//     async (
+//       req: express.Request,
+//       res: express.Response,
+//       next: express.NextFunction
+//     ) => {
+//       requestLog(`GET ARTICLE COLLECTION`);
+//       const result = await articleService
+//         .getArticleCollection()
+//         .catch((err: Error) => next(err));
+//       res.json(result);
+//     }
+//   );
 
 router
   .route('/:id')
@@ -41,10 +41,13 @@ router
     ) => {
       if (!req.params.id) throw new Error(statusCode.BAD_REQUEST);
       requestLog(`GET ARTICLE ${req.params.id}`);
-      const result = await articleService
-        .getArticleById(req.params.id)
-        .catch((err) => next(err));
-      res.json(result);
+
+      try {
+        const result = await articleService.getArticleById(req.params.id);
+        res.json(result);
+      } catch (err) {
+        console.log(err);
+      }
     }
   );
 router.use(require('@/middlewares/errors'));
