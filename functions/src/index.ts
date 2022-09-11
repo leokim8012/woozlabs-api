@@ -1,7 +1,6 @@
 require('module-alias/register');
-import 'reflect-metadata';
 import * as functions from 'firebase-functions';
-import userCollection, { UserAuthentication } from '@/models/users';
+import userCollection, { UserAuthentication } from '@/models/auth/users';
 import { auth } from '@/plugins/firebase';
 import { statusCode } from '@/types/statusCode';
 
