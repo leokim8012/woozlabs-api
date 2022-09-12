@@ -14,11 +14,6 @@ router.use(cors({ origin: true })); // CORS
 router.use('/articles', articles);
 router.use('/series', series);
 
-router.get('/test', async (req: express.Request, res: express.Response) => {
-  requestLog('GET BLOG CONTENTS TEST');
-  return res.send(true);
-});
-
 router.use(require('@/middlewares/errors'));
 
 module.exports = router;

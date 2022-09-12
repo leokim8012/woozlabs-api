@@ -6,13 +6,13 @@ export class BlogArticleDTO {
   constructor(
     readonly id: string,
     readonly category: string,
-    readonly imageURL: string,
+    readonly imageUrl: string,
     readonly filePath: string,
     readonly author: string,
     readonly title: string,
     readonly subtitle: string,
     readonly views: number,
-    readonly notionUrl: string,
+    readonly articleId: string,
     readonly createdAt?: Date,
     readonly updatedAt?: Date
   ) {}
@@ -25,37 +25,49 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
         updatedAt: firestore.FieldValue.serverTimestamp(),
       });
     }
+
+    const createdAt =
+      typeof model.createdAt === 'string'
+        ? new Date(model.createdAt)
+        : model.createdAt;
+    const updatedAt =
+      typeof model.updatedAt === 'string'
+        ? new Date(model.updatedAt)
+        : model.updatedAt;
     return {
       id: model.id,
       category: model.category,
       author: model.author,
       filePath: model.filePath,
-      imageURL: model.imageURL,
-      notionUrl: model.notionUrl,
+      imageUrl: model.imageUrl,
+      articleId: model.articleId,
       title: model.title,
       subtitle: model.subtitle,
       views: model.views || 0,
-      createdAt: model.createdAt || firestore.FieldValue.serverTimestamp(),
-      updatedAt: model.updatedAt || firestore.FieldValue.serverTimestamp(),
+      createdAt: createdAt || firestore.FieldValue.serverTimestamp(),
+      updatedAt: updatedAt || firestore.FieldValue.serverTimestamp(),
     };
   },
   fromFirestore: (
     snapshot: firestore.QueryDocumentSnapshot
   ): BlogArticleDTO => {
     const data = snapshot.data();
-
     return new BlogArticleDTO(
       data.id,
       data.category,
-      data.imageURL,
+      data.imageUrl,
       data.filePath,
       data.author,
       data.title,
       data.subtitle,
       data.views,
-      data.notionUrl,
-      data.createdAt.toDate(),
-      data.updatedAt.toDate()
+      data.articleId,
+      typeof data.createdAt === 'string'
+        ? new Date(data.createdAt)
+        : data.createdAt,
+      typeof data.updatedAt === 'string'
+        ? new Date(data.updatedAt)
+        : data.updatedAt
     );
   },
 };
