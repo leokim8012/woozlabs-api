@@ -52,6 +52,7 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
     snapshot: firestore.QueryDocumentSnapshot
   ): BlogArticleDTO => {
     const data = snapshot.data();
+
     return new BlogArticleDTO(
       data.id,
       data.category,
@@ -62,12 +63,8 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
       data.subtitle,
       data.views,
       data.articleId,
-      typeof data.createdAt === 'string'
-        ? new Date(data.createdAt)
-        : data.createdAt,
-      typeof data.updatedAt === 'string'
-        ? new Date(data.updatedAt)
-        : data.updatedAt
+      data.createdAt?.toDate(),
+      data.updatedAt?.toDate()
     );
   },
 };

@@ -20,7 +20,7 @@ export const articleRepository: ArticleRepository = {
   async find(_id: string) {
     try {
       const snapshot = await db
-        .collection('posts')
+        .collection('articles')
         .withConverter(converter)
         .doc(_id)
         .get();
@@ -44,8 +44,8 @@ export const articleRepository: ArticleRepository = {
       try {
         const snapshot = await db
           .collection('articles')
-          .where('category', '==', option.category)
           .withConverter(converter)
+          .where('category', '==', option.category)
           .get();
         const data = snapshot.docs.map((doc) => {
           return doc.data();
@@ -60,10 +60,10 @@ export const articleRepository: ArticleRepository = {
       try {
         const snapshot = await db
           .collection('articles')
+          .withConverter(converter)
           .orderBy(option.order, option.sort)
           .offset(option.offset)
           .limit(option.limit)
-          .withConverter(converter)
           .get();
         const data = snapshot.docs.map((doc) => {
           return doc.data();

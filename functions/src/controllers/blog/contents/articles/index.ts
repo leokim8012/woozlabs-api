@@ -71,6 +71,7 @@ router
       requestLog(`GET ARTICLE ${req.params.id}`);
       try {
         const result = await articleService.getArticleById(req.params.id);
+        console.log(result);
         res.json(result);
       } catch (err) {
         throw err;
