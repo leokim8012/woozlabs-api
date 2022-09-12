@@ -41,16 +41,47 @@ router
     ) => {
       requestLog(`GET ARTICLE COLLECTION`);
 
-      const { offset, limit, order, sort, category } = req.query;
-      if (offset == null || limit == null || order == null)
+      const { offset, limit, order, sort, search } = req.query;
+
+      if (limit == null || order == null || sort == null)
         throw new Error(statusCode.BAD_REQUEST);
+
       try {
         const result = await articleService.getArticleCollection({
-          offset: Number(offset),
+          offset: offset ? Number(offset) : 0,
           limit: Number(limit),
-          order: order as string,
-          sort: sort as 'desc' | 'asc',
-          category: category as string,
+          order: (order as string) ?? 'createdAt',
+          sort: (sort as 'desc' | 'asc') ?? 'desc',
+          search: search as [string, string],
+        });
+        res.json(result);
+      } catch (err) {
+        throw err;
+      }
+    }
+  );
+
+router
+  .route('/recommend')
+  .get(
+    async (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      requestLog(`GET RECOMMEND ARTICLES`);
+
+      const { offset, limit } = req.query;
+
+      if (limit == null) throw new Error(statusCode.BAD_REQUEST);
+
+      try {
+        const result = await articleService.getArticleCollection({
+          offset: offset ? Number(offset) : 0,
+          limit: Number(limit),
+          order: 'updatedAt',
+          sort: 'desc',
+          search: ['recommend', true],
         });
         res.json(result);
       } catch (err) {
@@ -72,6 +103,26 @@ router
       try {
         const result = await articleService.getArticleById(req.params.id);
         console.log(result);
+        res.json(result);
+      } catch (err) {
+        throw err;
+      }
+    }
+  )
+  .put(
+    async (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      if (!req.params.id || !req.body.id)
+        throw new Error(statusCode.BAD_REQUEST);
+      requestLog(`UPDATE ARTICLE ${req.params.id}`);
+      try {
+        const result = await articleService.updateArticle(
+          req.params.id,
+          req.body
+        );
         res.json(result);
       } catch (err) {
         throw err;

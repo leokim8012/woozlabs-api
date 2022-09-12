@@ -13,6 +13,7 @@ export class BlogArticleDTO {
     readonly subtitle: string,
     readonly views: number,
     readonly articleId: string,
+    readonly recommend: boolean,
     readonly createdAt?: Date,
     readonly updatedAt?: Date
   ) {}
@@ -25,7 +26,6 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
         updatedAt: firestore.FieldValue.serverTimestamp(),
       });
     }
-
     const createdAt =
       typeof model.createdAt === 'string'
         ? new Date(model.createdAt)
@@ -34,7 +34,8 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
       typeof model.updatedAt === 'string'
         ? new Date(model.updatedAt)
         : model.updatedAt;
-    return {
+
+    const result = {
       id: model.id,
       category: model.category,
       author: model.author,
@@ -44,9 +45,11 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
       title: model.title,
       subtitle: model.subtitle,
       views: model.views || 0,
+      recommend: model.recommend,
       createdAt: createdAt || firestore.FieldValue.serverTimestamp(),
       updatedAt: updatedAt || firestore.FieldValue.serverTimestamp(),
     };
+    return result;
   },
   fromFirestore: (
     snapshot: firestore.QueryDocumentSnapshot
@@ -63,6 +66,7 @@ export const converter: firestore.FirestoreDataConverter<BlogArticleDTO> = {
       data.subtitle,
       data.views,
       data.articleId,
+      data.recommend,
       data.createdAt?.toDate(),
       data.updatedAt?.toDate()
     );

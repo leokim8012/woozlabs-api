@@ -3,17 +3,17 @@ import { db } from '@/plugins/firebase';
 import { statusCode } from '@/types/statusCode';
 import express from 'express';
 export interface ArticleRepositoryOptions {
-  offset: number;
   limit: number;
-  order: string;
-  sort: 'desc' | 'asc';
-  category?: string;
+  order?: string;
+  sort?: 'desc' | 'asc';
+  offset?: number;
+  search?: [string, any];
 }
 export interface ArticleRepository {
   find(_id: string): Promise<BlogArticleDTO>;
   findAll(options: ArticleRepositoryOptions): Promise<Array<BlogArticleDTO>>;
   create(articleDTO: BlogArticleDTO): Promise<string>;
-  update(articleDTO: BlogArticleDTO): Promise<boolean>;
+  update(id: string, articleDTO: BlogArticleDTO): Promise<string>;
 }
 
 export const articleRepository: ArticleRepository = {
@@ -40,12 +40,12 @@ export const articleRepository: ArticleRepository = {
   ): Promise<Array<BlogArticleDTO>> {
     const option = _option;
 
-    if (option.category && option.category != 'All') {
+    if (option.search && option.search[0] && option.search[0] != 'All') {
       try {
         const snapshot = await db
           .collection('articles')
           .withConverter(converter)
-          .where('category', '==', option.category)
+          .where(option.search[0], '==', option.search[1])
           .get();
         const data = snapshot.docs.map((doc) => {
           return doc.data();
@@ -62,9 +62,10 @@ export const articleRepository: ArticleRepository = {
           .collection('articles')
           .withConverter(converter)
           .orderBy(option.order, option.sort)
-          .offset(option.offset)
+          .offset(option.offset ?? 0)
           .limit(option.limit)
           .get();
+
         const data = snapshot.docs.map((doc) => {
           return doc.data();
         });
@@ -95,7 +96,22 @@ export const articleRepository: ArticleRepository = {
     }
   },
 
-  async update(articleDTO: BlogArticleDTO): Promise<boolean> {
-    return false;
+  async update(_id: string, articleDTO: BlogArticleDTO): Promise<string> {
+    try {
+      const snapshot = await db
+        .collection('articles')
+        .withConverter(converter)
+        .doc(_id)
+        .set(articleDTO);
+      const id = articleDTO.id;
+      if (id) {
+        return id;
+      }
+      throw new Error(statusCode.BAD_REQUEST);
+    } catch (e) {
+      throw e;
+    }
   },
 };
+
+const _filterSearchValue = (value: string) => {};

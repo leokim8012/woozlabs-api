@@ -12,6 +12,7 @@ export interface ArticleService {
   ): Promise<Array<BlogArticleDTO>>;
 
   createArticle(articleDTO: BlogArticleDTO): Promise<string>;
+  updateArticle(id: string, articleDTO: BlogArticleDTO): Promise<string>;
 }
 
 export const articleService: ArticleService = {
@@ -36,6 +37,17 @@ export const articleService: ArticleService = {
   async createArticle(articleDTO: BlogArticleDTO): Promise<string> {
     try {
       const id = await articleRepository.create(articleDTO);
+      return id;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async updateArticle(
+    _id: string,
+    articleDTO: BlogArticleDTO
+  ): Promise<string> {
+    try {
+      const id = await articleRepository.update(_id, articleDTO);
       return id;
     } catch (err) {
       throw err;
