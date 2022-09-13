@@ -7,6 +7,7 @@ module.exports = (
   res: express.Response,
   next: express.NextFunction
 ) => {
+  console.error(err);
   switch (err.message) {
     case statusCode.BAD_REQUEST:
       return res.status(400).end();
@@ -32,5 +33,6 @@ module.exports = (
     case statusCode.DB_ERROR:
       return res.status(600).end();
   }
-  return res.send(err.message);
+  res.status(500);
+  return res.render('error', { error: err });
 };

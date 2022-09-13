@@ -56,7 +56,7 @@ router
         });
         res.json(result);
       } catch (err) {
-        throw err;
+        throw err as Error;
       }
     }
   );
@@ -83,7 +83,7 @@ router
           sort: 'desc',
           search: ['recommend', true],
         });
-        res.json(result);
+        res.json(result.items);
       } catch (err) {
         throw err;
       }
@@ -102,7 +102,6 @@ router
       requestLog(`GET ARTICLE ${req.params.id}`);
       try {
         const result = await articleService.getArticleById(req.params.id);
-        console.log(result);
         res.json(result);
       } catch (err) {
         throw err;

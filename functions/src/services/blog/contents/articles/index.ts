@@ -2,6 +2,7 @@ import { BlogArticleDTO } from '@/models/blog/contents';
 import {
   articleRepository,
   ArticleRepositoryOptions,
+  ArticleRepositoryResponse,
 } from '@/repository/blog/contents/articles';
 import express from 'express';
 
@@ -9,7 +10,7 @@ export interface ArticleService {
   getArticleById(_id: string): Promise<BlogArticleDTO>;
   getArticleCollection(
     options: ArticleRepositoryOptions
-  ): Promise<Array<BlogArticleDTO>>;
+  ): Promise<ArticleRepositoryResponse>;
 
   createArticle(articleDTO: BlogArticleDTO): Promise<string>;
   updateArticle(id: string, articleDTO: BlogArticleDTO): Promise<string>;
@@ -26,12 +27,12 @@ export const articleService: ArticleService = {
   },
   async getArticleCollection(
     options: ArticleRepositoryOptions
-  ): Promise<Array<BlogArticleDTO>> {
+  ): Promise<ArticleRepositoryResponse> {
     try {
       const data = await articleRepository.findAll(options);
       return data;
     } catch (err) {
-      throw err;
+      throw err as Error;
     }
   },
   async createArticle(articleDTO: BlogArticleDTO): Promise<string> {
