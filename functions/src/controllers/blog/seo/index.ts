@@ -64,7 +64,7 @@ exports.og = functions.https.onRequest(async (req, res) => {
 
       let doc = null;
       switch (page) {
-        case 'articles':
+        case 'article':
           if (id) doc = await db.collection('articles').doc(id).get();
           break;
         case 'archive':
