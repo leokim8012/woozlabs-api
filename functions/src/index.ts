@@ -4,41 +4,42 @@ import userCollection, { UserAuthentication } from '@/models/auth/users';
 import { auth } from '@/plugins/firebase';
 import { statusCode } from '@/types/statusCode';
 
-exports.blog = functions.https.onRequest(require('@/controllers/blog'));
+exports.info = require('@/controllers/infos');
+exports.blog = require('@/controllers/blog');
+// exports.seo = require('@/controllers/seo');
+// export const createUser = functions.auth.user().onCreate(async (user) => {
+//   const { uid, email, providerData, displayName, photoURL, emailVerified } =
+//     user;
 
-export const createUser = functions.auth.user().onCreate(async (user) => {
-  const { uid, email, providerData, displayName, photoURL, emailVerified } =
-    user;
+//   const claims = { level: 3 };
 
-  const claims = { level: 3 };
+//   // if (functions.config().admin.email === user.email && user.emailVerified) {
+//   //   claims.level = 0;
+//   // }
 
-  // if (functions.config().admin.email === user.email && user.emailVerified) {
-  //   claims.level = 0;
-  // }
+//   await auth.getAuth().setCustomUserClaims(uid, claims);
 
-  await auth.getAuth().setCustomUserClaims(uid, claims);
+//   const ref = userCollection.doc(uid);
 
-  const ref = userCollection.doc(uid);
+//   if (!email) throw Error(statusCode.BAD_REQUEST);
 
-  if (!email) throw Error(statusCode.BAD_REQUEST);
+//   const userData = new UserAuthentication(
+//     uid,
+//     email,
+//     emailVerified,
+//     providerData.map((p) => p.providerId),
+//     displayName,
+//     photoURL,
+//     claims.level
+//   );
 
-  const userData = new UserAuthentication(
-    uid,
-    email,
-    emailVerified,
-    providerData.map((p) => p.providerId),
-    displayName,
-    photoURL,
-    claims.level
-  );
+//   console.log(userData);
+//   const r = await ref.set(userData);
 
-  console.log(userData);
-  const r = await ref.set(userData);
+//   return r;
+// });
 
-  return r;
-});
-
-export const deleteUser = functions.auth.user().onDelete((user) => {
-  const ref = userCollection.doc(user.uid);
-  return ref.delete();
-});
+// export const deleteUser = functions.auth.user().onDelete((user) => {
+//   const ref = userCollection.doc(user.uid);
+//   return ref.delete();
+// });

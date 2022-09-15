@@ -7,6 +7,7 @@ import { RegistrableController } from '@/controllers/RegistrableController';
 import { requestLog } from '@/utils/requestLog';
 import express from 'express';
 import { articleService } from '@/services/blog/contents/articles';
+import * as functions from 'firebase-functions';
 
 require('express-async-errors');
 const cors = require('cors');
