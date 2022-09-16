@@ -39,32 +39,30 @@ exports.sitemap = functions.https.onRequest(async (req, res) => {
 });
 
 exports.og = functions.https.onRequest(async (req, res) => {
+  requestLog(`blog-og ${req.path}`);
   const { parse } = require('node-html-parser');
   const fs = require('fs');
   const pluralize = require('pluralize');
-  request(
+  await request(
     {
       uri: 'https://blog.woozlabs.com',
     },
     async (error: string, response: string, body: string) => {
       const html: string = body;
       const root: Element = parse(html);
-
       const ps = req.path.split('/');
       ps.shift();
       if (ps.length === 0) {
         res.send(html);
         return;
       }
-      requestLog('blog-og');
-
       if (ps[0] == 'page') ps.shift();
       const page = pluralize(ps.shift());
       const id = ps.shift();
 
       let doc = null;
       switch (page) {
-        case 'article':
+        case 'articles':
           if (id) doc = await db.collection('articles').doc(id).get();
           break;
         case 'archive':
