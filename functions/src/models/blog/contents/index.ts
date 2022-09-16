@@ -1,0 +1,1 @@
+export { BlogArticleDTO } from './articles';

@@ -1,0 +1,16 @@
+{
+  "urls": [
+    {
+      "url": "http://petstore.swagger.io/v2/swagger.json",
+      "name": "Petstore"
+    },
+    {
+      "url": "http://localhost:9002/api-docs/swagger-test",
+      "name": "Petstore2"
+    },
+    {
+      "url": "http://localhost:9002/api-docs/swagger-test",
+      "name": "Petstore3"
+    }
+  ]
+}
