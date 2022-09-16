@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "woozlabs"
-  }
+  },
+  "targets": {
+    "woozlabs": {
+      "hosting": {
+        "api": [
+          "woozlabs-api"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

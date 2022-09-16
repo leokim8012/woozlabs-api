@@ -6,6 +6,7 @@ import { statusCode } from '@/types/statusCode';
 
 exports.info = require('@/controllers/infos');
 exports.blog = require('@/controllers/blog');
+exports.api = functions.https.onRequest(require('@/controllers/api'));
 // exports.seo = require('@/controllers/seo');
 // export const createUser = functions.auth.user().onCreate(async (user) => {
 //   const { uid, email, providerData, displayName, photoURL, emailVerified } =
