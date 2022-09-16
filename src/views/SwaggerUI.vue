@@ -10,15 +10,8 @@ import "swagger-ui/dist/swagger-ui.css";
 @Component
 export default class SwaggerUI extends Vue {
   mounted() {
-    const _urls = [
-      {
-        url: "https://petstore.swagger.io/api/swagger.json",
-        name: "TEST",
-      },
-    ];
-    const _url = "https://petstore.swagger.io/v2/swagger.json";
     SwaggerUIBundle({
-      url: _url,
+      url: "WOOZ-API.yaml",
       dom_id: "#swagger-ui",
       deepLinking: true,
       presets: [SwaggerUIBundle.presets.apis],

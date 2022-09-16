@@ -1,14 +1,21 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "home",
+    redirect: "/api",
+  },
+  {
+    path: "/api",
+    name: "Home",
     component: () => import("@/views/HomeView.vue"),
+  },
+  {
+    path: "*",
+    component: () => import("@/views/404.vue"),
   },
 ];
 
