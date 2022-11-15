@@ -18,8 +18,8 @@ app.get(
   }
 );
 
-app.get('/test-failed', async (req: express.Request, res: express.Response) => {
-  throw Error(statusCode.BAD_REQUEST);
+app.get('/test-fail', async (req: express.Request, res: express.Response) => {
+  throw new Error(statusCode.BAD_REQUEST);
 });
 
 app.use(require('@/middlewares/errors'));
