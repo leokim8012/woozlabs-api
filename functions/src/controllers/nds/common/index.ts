@@ -54,7 +54,7 @@ app.post('/save/:uid', async (req: express.Request, res: express.Response) => {
       });
 
     const result = await NDSService.createNDSHistory({
-      id: req.params.id,
+      id: req.params.uid,
       dataPath: `NDS/${req.params.uid}/${req.body.gameId.replaceAll(
         ' ',
         ''
