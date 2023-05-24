@@ -55,7 +55,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Target Firebase
-        run: npx firebase-tools use dev
+        run: npx firebase-tools use default
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - name: Deploy Firebase
