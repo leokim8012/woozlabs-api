@@ -11,4 +11,4 @@ exports.info = require('@/controllers/infos');
 exports.blog = require('@/controllers/blog');
 exports.nds = require('@/controllers/nds');
 exports.api = require('@/controllers/api');
-exports.users = require('@/controllers/users');
+exports.user = require('@/controllers/user');
