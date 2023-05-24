@@ -14,35 +14,52 @@ require('express-async-errors');
 // middlewares
 app.use(cors({ origin: true })); // CORS
 
-app.get('/save/:id', async (req: express.Request, res: express.Response) => {
-  if (!req.params.id) throw new Error(statusCode.BAD_REQUEST);
-  requestLog('GET NDS SAVE');
-  try {
-    const result = await NDSService.getNDSDataById(req.params.id);
-    res.json(result);
-  } catch (err) {
-    throw err as Error;
+app.get(
+  '/save/:uid/:id',
+  async (req: express.Request, res: express.Response) => {
+    if (!req.params.id || !req.params.uid)
+      throw new Error(statusCode.BAD_REQUEST);
+    requestLog('GET NDS SAVE');
+    try {
+      const history = await NDSService.getLastestNDSHistory(
+        req.params.uid,
+        req.params.id
+      );
+      const url = await storage
+        .bucket()
+        .file(history.dataPath)
+        .getSignedUrl({
+          version: 'v4',
+          action: 'read',
+          expires: Date.now() + 1 * 60 * 1000, // 1 minutes
+        });
+      res.send(url[0]);
+    } catch (err) {
+      throw err as Error;
+    }
   }
-});
-app.post('/save/:id', async (req: express.Request, res: express.Response) => {
-  if (!req.params.id || !req.body) throw new Error(statusCode.BAD_REQUEST);
+);
+app.post('/save/:uid', async (req: express.Request, res: express.Response) => {
+  if (!req.params.uid || !req.body) throw new Error(statusCode.BAD_REQUEST);
   requestLog('POST NDS SAVE');
   try {
-    // const blob = new Blob([req.body.data], { type: 'application/binary' });
-    // console.log(blob);
     const array = Uint8Array.from(Object.values(req.body.data));
     const data = Buffer.from(array);
     await storage
       .bucket()
-      .file(`NDS/${req.body.uid}/${req.body.gameId}.sav`)
+      .file(`NDS/${req.params.uid}/${req.body.gameId.replaceAll(' ', '')}.sav`)
       .save(data, {
         resumable: false,
         metadata: { contentType: 'application/binary' },
       });
-    const result = await NDSService.updateNDSDataById(req.params.id, {
-      id: req.params.id,
-      dataPath: `NDS/${req.body.uid}/${req.body.gameId}.sav`,
-      uid: req.body.uid,
+
+    const result = await NDSService.createNDSHistory({
+      id: req.params.uid,
+      dataPath: `NDS/${req.params.uid}/${req.body.gameId.replaceAll(
+        ' ',
+        ''
+      )}.sav`,
+      uid: req.params.uid,
       gameId: req.body.gameId,
     });
     res.json(result);

@@ -1,4 +1,5 @@
 {
+  "projectId": "woozlabs",
   "functions": {
     "source": "functions"
   },
@@ -9,6 +10,14 @@
     "public": "dist",
     "target": "api",
     "rewrites": [
+      {
+        "source": "/api/common/**",
+        "function": "api-common"
+      },
+      {
+        "source": "/v1/user/auth/**",
+        "function": "user-auth"
+      },
       {
         "source": "**",
         "destination": "/index.html"

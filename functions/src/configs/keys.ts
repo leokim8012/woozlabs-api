@@ -1,7 +1,3 @@
-import devServiceAccount from './devKey.json';
-import prodServiceAccount from './prodKey.json';
+import key from '@/configs/key.json';
 
-export const serviceAccount =
-  process.env.node_env === 'production'
-    ? prodServiceAccount
-    : devServiceAccount;
+export const serviceAccount = key;

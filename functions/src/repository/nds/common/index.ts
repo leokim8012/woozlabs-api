@@ -6,6 +6,7 @@ import express from 'express';
 export interface NDSRepository {
   find(id: string): Promise<NDSDTO>;
   findByGameId(uid: string, gameId: string): Promise<NDSDTO>;
+  findLatestHistoryByGameId(uid: string, gameId: string): Promise<NDSDTO>;
   create(data: NDSDTO): Promise<string>;
   update(id: string, data: NDSDTO): Promise<string>;
 }
@@ -14,7 +15,7 @@ export const NDSRepository: NDSRepository = {
   async find(id: string): Promise<NDSDTO> {
     try {
       const snapshot = await db
-        .collection('nds')
+        .collection('ndsHistory')
         .withConverter(converter)
         .doc(id)
         .get();
@@ -30,7 +31,7 @@ export const NDSRepository: NDSRepository = {
   async findByGameId(uid: string, gameId: string): Promise<NDSDTO> {
     try {
       const snapshot = await db
-        .collection('nds')
+        .collection('ndsHistory')
         .withConverter(converter)
         .where('uid', '==', uid)
         .where('gameId', '==', gameId)
@@ -45,13 +46,35 @@ export const NDSRepository: NDSRepository = {
       throw e;
     }
   },
+  async findLatestHistoryByGameId(
+    uid: string,
+    gameId: string
+  ): Promise<NDSDTO> {
+    try {
+      const snapshot = await db
+        .collection('ndsHistory')
+        .where('uid', '==', uid)
+        .where('gameId', '==', gameId)
+        .orderBy('createdAt', 'desc')
+        .limit(1)
+        .withConverter(converter)
+        .get();
+      const data = snapshot.docs.pop()?.data();
+      if (data) {
+        return data;
+      } else {
+        throw new Error(statusCode.NOT_FOUND);
+      }
+    } catch (e) {
+      throw e;
+    }
+  },
   async create(data: NDSDTO): Promise<string> {
     try {
       const snapshot = await db
-        .collection('nds')
+        .collection('ndsHistory')
         .withConverter(converter)
-        .doc(data.id)
-        .create(data);
+        .add(data);
       const id = data.id;
       if (id) {
         return id;
@@ -64,7 +87,7 @@ export const NDSRepository: NDSRepository = {
   async update(_id: string, data: NDSDTO): Promise<string> {
     try {
       const snapshot = await db
-        .collection('nds')
+        .collection('ndsHistory')
         .withConverter(converter)
         .doc(_id)
         .set(data);
