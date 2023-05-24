@@ -5,6 +5,7 @@ import { serviceAccount } from '@/configs/keys';
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
   storageBucket: process.env.STORAGE_BUCKET,
+  projectId: 'woozlabs',
 });
 
 export const storage = admin.storage();
