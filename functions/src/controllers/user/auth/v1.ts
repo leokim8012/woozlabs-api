@@ -18,6 +18,7 @@ router
       // Get __session cookie
       const sessionCookie = req.cookies.__session || '';
 
+      console.log(`STATUS REQUESTED: ${sessionCookie}`);
       // Verify the session cookie. In this case, to check if it's revoked.
       admin
         .auth()
@@ -47,7 +48,9 @@ router
       res: express.Response,
       next: express.NextFunction
     ) => {
-      const idToken = req.body.idToken;
+      const idToken = req.body.idToken as string;
+
+      console.log(`LOGIN REQUESTED: ${idToken}`);
       try {
         // Verify the ID token first.
         const decodedIdToken = await admin.auth().verifyIdToken(idToken);
