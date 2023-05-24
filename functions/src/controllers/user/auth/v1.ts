@@ -8,44 +8,6 @@ import { userAuthService } from '@/services/user/auth';
 const router = express.Router();
 
 router
-  .route('/:uid')
-  .get(
-    async (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ) => {
-      if (!req.params.uid) throw new Error(statusCode.BAD_REQUEST);
-      requestLog(`GET USER ${req.params.uid}`);
-      try {
-        const result = await userAuthService.getUserByUid(req.params.uid);
-        res.status(200).json(result);
-      } catch (err) {
-        throw err;
-      }
-    }
-  )
-  .post(
-    async (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction
-    ) => {
-      if (!req.params.uid) throw new Error(statusCode.BAD_REQUEST);
-      requestLog(`PATCH USER ${req.params.uid}`);
-      try {
-        const result = await userAuthService.updateUser(
-          req.params.uid,
-          req.body
-        );
-        res.status(200).json(result);
-      } catch (err) {
-        throw err;
-      }
-    }
-  );
-
-router
   .route('/status')
   .get(
     async (
@@ -159,6 +121,44 @@ router
 
       res.cookie('__session', '', options);
       res.end(JSON.stringify({ status: 'success' }));
+    }
+  );
+
+router
+  .route('/:uid')
+  .get(
+    async (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      if (!req.params.uid) throw new Error(statusCode.BAD_REQUEST);
+      requestLog(`GET USER ${req.params.uid}`);
+      try {
+        const result = await userAuthService.getUserByUid(req.params.uid);
+        res.status(200).json(result);
+      } catch (err) {
+        throw err;
+      }
+    }
+  )
+  .post(
+    async (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      if (!req.params.uid) throw new Error(statusCode.BAD_REQUEST);
+      requestLog(`PATCH USER ${req.params.uid}`);
+      try {
+        const result = await userAuthService.updateUser(
+          req.params.uid,
+          req.body
+        );
+        res.status(200).json(result);
+      } catch (err) {
+        throw err;
+      }
     }
   );
 
