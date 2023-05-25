@@ -1,6 +1,7 @@
 /* eslint-disable no-global-assign */
 module.exports = {
   transpileDependencies: ["vuetify"],
+  productionSourceMap: false,
   // css: { loaderOptions: { scss: { prependData: ' @import "@/assets/styles/systemFonts.scss"; ' } } },
   chainWebpack: (config) => {
     config.plugin("html").tap((args) => {

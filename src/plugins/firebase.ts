@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import Vue from "vue";
-import firebaseConfig from "../../firebaseConfig";
+import firebaseConfig from "../../functions/src/configs/key.json";
 
 import firebase from "firebase/compat/app";
 
