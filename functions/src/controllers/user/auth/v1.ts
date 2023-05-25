@@ -16,9 +16,8 @@ router
       res: express.Response,
       next: express.NextFunction
     ) => {
-      console.log(req.cookies);
       // Get session cookie
-      const sessionCookie = req.cookies.session;
+      const sessionCookie = req.cookies.__session;
 
       if (!sessionCookie) {
         res.status(400).send('BAD REQUEST!');
@@ -74,7 +73,7 @@ router
           domain: '.woozlabs.com',
         };
 
-        res.cookie('session', sessionCookie, options);
+        res.cookie('__session', sessionCookie, options);
         res.end(JSON.stringify({ status: 'success' }));
       } catch (error) {
         res.status(401).send('UNAUTHORIZED REQUEST!');
@@ -128,7 +127,7 @@ router
         domain: '.woozlabs.com',
       };
 
-      res.cookie('session', '', options);
+      res.cookie('__session', '', options);
       res.end(JSON.stringify({ status: 'success' }));
     }
   );
