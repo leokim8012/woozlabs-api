@@ -6,9 +6,6 @@ import express, { CookieOptions } from 'express';
 import { statusCode } from '@/types/statusCode';
 import { userAuthService } from '@/services/user/auth';
 const router = express.Router();
-const cookieParser = require('cookie-parser');
-router.use(cookieParser());
-
 router
   .route('/sessionStatus')
   .get(

@@ -4,6 +4,8 @@ import { requestLog } from '@/utils/requestLog';
 import * as functions from 'firebase-functions';
 import express from 'express';
 const app = express();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 const cors = require('cors');
 require('express-async-errors');
 
