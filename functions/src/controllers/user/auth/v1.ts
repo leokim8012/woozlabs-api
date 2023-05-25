@@ -14,6 +14,7 @@ router
       res: express.Response,
       next: express.NextFunction
     ) => {
+      console.log(req.cookies);
       // Get session cookie
       const sessionCookie = req.cookies.session;
 
