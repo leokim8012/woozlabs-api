@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
 router
-  .route('/status')
+  .route('/sessionStatus')
   .get(
     async (
       req: express.Request,
