@@ -3,10 +3,6 @@ import * as functions from 'firebase-functions';
 import { auth } from '@/plugins/firebase';
 import { statusCode } from '@/types/statusCode';
 
-import express from 'express';
-
-require('express-async-errors');
-
 exports.user = require('@/controllers/user');
 exports.info = require('@/controllers/infos');
 exports.blog = require('@/controllers/blog');
