@@ -70,7 +70,7 @@ router
           domain: '.woozlabs.com',
         };
 
-        res.cookie('__session', sessionCookie, options);
+        res.cookie('session', sessionCookie, options);
         res.end(JSON.stringify({ status: 'success' }));
       } catch (error) {
         res.status(401).send('UNAUTHORIZED REQUEST!');
@@ -124,7 +124,7 @@ router
         domain: '.woozlabs.com',
       };
 
-      res.cookie('__session', '', options);
+      res.cookie('session', '', options);
       res.end(JSON.stringify({ status: 'success' }));
     }
   );
