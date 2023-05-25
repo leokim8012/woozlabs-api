@@ -5,7 +5,11 @@ import * as functions from 'firebase-functions';
 import express, { CookieOptions } from 'express';
 import { statusCode } from '@/types/statusCode';
 import { userAuthService } from '@/services/user/auth';
+const cookieParser = require('cookie-parser');
 const router = express.Router();
+
+router.use(cookieParser());
+
 router
   .route('/sessionStatus')
   .get(
@@ -18,7 +22,10 @@ router
       // Get session cookie
       const sessionCookie = req.cookies.session;
 
-      if (!sessionCookie) res.status(400).send('BAD REQUEST!');
+      if (!sessionCookie) {
+        res.status(400).send('BAD REQUEST!');
+        return;
+      }
 
       console.log(`STATUS REQUESTED: ${sessionCookie}`);
       // Verify the session cookie. In this case, to check if it's revoked.
@@ -33,8 +40,10 @@ router
 
         // Send custom token to the client.
         res.send({ customToken });
+        return;
       } catch (e) {
         res.status(401).send('UNAUTHORIZED REQUEST!');
+        return;
       }
     }
   );
