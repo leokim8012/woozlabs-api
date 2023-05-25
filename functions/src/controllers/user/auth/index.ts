@@ -8,7 +8,7 @@ const cors = require('cors');
 require('express-async-errors');
 
 // middlewares
-app.use(cors({ origin: true })); // CORS
+app.use(cors({ origin: true, credentials: true })); // CORS
 app.use('/v1/user/auth', require('@/controllers/user/auth/v1'));
 
 app.use(require('@/middlewares/errors'));
