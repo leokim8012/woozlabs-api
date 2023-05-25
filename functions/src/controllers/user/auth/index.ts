@@ -5,12 +5,13 @@ import * as functions from 'firebase-functions';
 import express from 'express';
 const app = express();
 const cookieParser = require('cookie-parser');
-app.use(cookieParser());
 const cors = require('cors');
 require('express-async-errors');
 
 // middlewares
 app.use(cors({ origin: true, credentials: true })); // CORS
+app.use(cookieParser());
+
 app.use('/v1/user/auth', require('@/controllers/user/auth/v1'));
 
 app.use(require('@/middlewares/errors'));

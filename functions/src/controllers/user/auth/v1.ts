@@ -17,6 +17,8 @@ router
       // Get session cookie
       const sessionCookie = req.cookies.session || '';
 
+      if (!sessionCookie) res.status(400).send('UNAUTHORIZED REQUEST!');
+
       console.log(`STATUS REQUESTED: ${sessionCookie}`);
       // Verify the session cookie. In this case, to check if it's revoked.
 
