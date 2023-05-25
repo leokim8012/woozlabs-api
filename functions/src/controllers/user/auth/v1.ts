@@ -5,10 +5,8 @@ import * as functions from 'firebase-functions';
 import express, { CookieOptions } from 'express';
 import { statusCode } from '@/types/statusCode';
 import { userAuthService } from '@/services/user/auth';
-import cookieParser from 'cookie-parser';
-const router = express.Router();
 
-router.use(cookieParser());
+const router = express.Router();
 
 router
   .route('/sessionStatus')

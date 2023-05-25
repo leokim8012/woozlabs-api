@@ -7,8 +7,8 @@ import express from 'express';
 
 require('express-async-errors');
 
+exports.user = require('@/controllers/user');
 exports.info = require('@/controllers/infos');
 exports.blog = require('@/controllers/blog');
 exports.nds = require('@/controllers/nds');
 exports.api = require('@/controllers/api');
-exports.user = require('@/controllers/user');
