@@ -17,33 +17,30 @@ router
       res: express.Response,
       next: express.NextFunction
     ) => {
-      // Get __session cookie
-      const sessionCookie = req.cookies.__session || '';
+      // Get session cookie
+      const sessionCookie = req.cookies.session || '';
 
       console.log(`STATUS REQUESTED: ${sessionCookie}`);
       // Verify the session cookie. In this case, to check if it's revoked.
-      admin
-        .auth()
-        .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-        .then(async (decodedClaims) => {
-          // Session cookie is valid and not revoked. Get the uid.
-          const uid = decodedClaims.uid;
 
-          // Create a custom token.
-          const customToken = await admin.auth().createCustomToken(uid);
+      try {
+        const decodedClaims = await admin
+          .auth()
+          .verifySessionCookie(sessionCookie, true);
+        const uid = decodedClaims.uid;
+        // Create a custom token.
+        const customToken = await admin.auth().createCustomToken(uid);
 
-          // Send custom token to the client.
-          res.send({ customToken });
-        })
-        .catch((error) => {
-          // Session cookie is unavailable or invalid. Force user to login.
-          res.status(401).send('UNAUTHORIZED REQUEST!');
-        });
+        // Send custom token to the client.
+        res.send({ customToken });
+      } catch (e) {
+        res.status(401).send('UNAUTHORIZED REQUEST!');
+      }
     }
   );
 
 router
-  .route('/login')
+  .route('/sessionLogin')
   .post(
     async (
       req: express.Request,
@@ -78,7 +75,7 @@ router
     }
   );
 router
-  .route('/logout')
+  .route('/sessionLogout')
   .post(
     async (
       req: express.Request,
