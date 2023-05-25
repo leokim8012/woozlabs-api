@@ -9,6 +9,8 @@
     "firebase:host-deploy": "vue-cli-service build && firebase deploy --only hosting:api"
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.8.3",
     "firebase": "^9.10.0",

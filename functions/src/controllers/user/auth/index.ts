@@ -3,9 +3,9 @@ import admin, { storage } from '@/plugins/firebase';
 import { requestLog } from '@/utils/requestLog';
 import * as functions from 'firebase-functions';
 import express from 'express';
-
+import cookieParser from 'cookie-parser';
 const app = express();
-const cookieParser = require('cookie-parser');
+
 const cors = require('cors');
 require('express-async-errors');
 

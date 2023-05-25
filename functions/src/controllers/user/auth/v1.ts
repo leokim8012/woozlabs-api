@@ -5,7 +5,7 @@ import * as functions from 'firebase-functions';
 import express, { CookieOptions } from 'express';
 import { statusCode } from '@/types/statusCode';
 import { userAuthService } from '@/services/user/auth';
-const cookieParser = require('cookie-parser');
+import cookieParser from 'cookie-parser';
 const router = express.Router();
 
 router.use(cookieParser());
