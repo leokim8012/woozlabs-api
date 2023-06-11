@@ -61,21 +61,26 @@ router
       }
     }
   );
-
 router
-  .route('/chat/:chatId/history')
+  .route('/chat/history')
   .get(async (req: express.Request, res: express.Response) => {
-    const chatId: string = req.params.chatId;
+    const chatId: string = req.query.chatId as string;
     const uid: string = req.body.uid;
 
     try {
-      const chatHistory = await chatService.getChatHistory(uid, chatId);
+      let chatHistory;
+      if (chatId) {
+        // Fetch history for specific chatId
+        chatHistory = await chatService.getChatHistory(uid, chatId);
+      } else {
+        // Fetch all chat histories for the uid
+        chatHistory = await chatService.getAllChatHistories(uid);
+      }
       res.json({ history: chatHistory });
     } catch (err) {
       throw err;
     }
   });
-
 router.use(require('@/middlewares/errors'));
 
 module.exports = router;

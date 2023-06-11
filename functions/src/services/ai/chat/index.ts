@@ -15,7 +15,9 @@ export interface ChatService {
     model: IChatModel,
     message: ChatMessageDTO
   ): Promise<string>;
-  getChatHistory(uid: string, chatId: string): Promise<ChatDTO>;
+
+  getChatHistory(uid: string, chatId?: string): Promise<ChatDTO | ChatDTO[]>;
+  getAllChatHistories(uid: string): Promise<ChatDTO[]>;
   validateUserChatAccess(uid: string, chatId: string): Promise<boolean>;
 }
 
@@ -72,15 +74,31 @@ export const chatService: ChatService = {
     return modelResponse;
   },
 
-  async getChatHistory(uid: string, chatId: string): Promise<ChatDTO> {
+  async getChatHistory(
+    uid: string,
+    chatId?: string
+  ): Promise<ChatDTO | ChatDTO[]> {
     try {
-      // Verify if the user has access to the chat.
-      const hasAccess = await this.validateUserChatAccess(uid, chatId);
-      if (!hasAccess) {
-        throw new Error("User doesn't have access to the chat.");
+      // If chatId is provided, get history for that chat. Otherwise, get all chats for the user.
+      if (chatId) {
+        const hasAccess = await this.validateUserChatAccess(uid, chatId);
+        if (!hasAccess) {
+          throw new Error("User doesn't have access to the chat.");
+        }
+        const chatHistory = await chatRepository.getChatHistory(chatId);
+        return chatHistory;
+      } else {
+        return this.getAllChatHistories(uid);
       }
-      const chatHistory = await chatRepository.getChatHistory(chatId);
-      return chatHistory;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getAllChatHistories(uid: string): Promise<ChatDTO[]> {
+    try {
+      const allChats = await chatRepository.getAllChats(uid);
+      return allChats;
     } catch (err) {
       throw err;
     }
