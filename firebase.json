@@ -19,6 +19,10 @@
         "function": "user-auth"
       },
       {
+        "source": "/v1/ai/chat/**",
+        "function": "ai-chat"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
