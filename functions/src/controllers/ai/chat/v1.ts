@@ -28,12 +28,12 @@ router
       console.log(`SEND CHAT MESSAGE: ${model} ${uid}`);
 
       try {
-        const chatId = await chatService.startChatWithModel(
+        const responseMessage = await chatService.startChatWithModel(
           uid,
           model,
           message
         );
-        res.status(201).json({ chatId: chatId });
+        res.status(201).json({ response: responseMessage });
       } catch (err) {
         throw err;
       }
