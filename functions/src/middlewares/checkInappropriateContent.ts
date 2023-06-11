@@ -1,3 +1,4 @@
+import { ChatMessageDTO } from '@/models/ai/chat';
 import { Request, Response, NextFunction } from 'express';
 
 export function checkForInappropriateContent(
@@ -5,11 +6,11 @@ export function checkForInappropriateContent(
   res: Response,
   next: NextFunction
 ) {
-  const message: string = req.body.message;
+  const message: ChatMessageDTO = req.body.message;
   const forbiddenWords = ['badword1', 'badword2']; // Replace with real list
 
   for (let word of forbiddenWords) {
-    if (message.includes(word)) {
+    if (message.content.includes(word)) {
       res.status(400).json({ error: 'Inappropriate content found.' });
     }
   }
