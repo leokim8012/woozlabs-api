@@ -22,6 +22,8 @@ router
         message,
       }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
 
+      console.log(`SEND CHAT MESSAGE: ${model} ${uid}`);
+
       try {
         const chatId = await chatService.startChatWithModel(
           uid,
@@ -48,6 +50,7 @@ router
       }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
       const chatId: string = req.params.chatId;
 
+      console.log(`SEND CHAT MESSAGE: ${model} ${uid}`);
       try {
         const responseMessage = await chatService.sendMessageToModel(
           uid,
@@ -67,6 +70,7 @@ router
     const chatId: string = req.query.chatId as string;
     const uid: string = req.body.uid;
 
+    console.log(`GET CHAT HISTORY: ${uid} | ${chatId}`);
     try {
       let chatHistory;
       if (chatId) {
