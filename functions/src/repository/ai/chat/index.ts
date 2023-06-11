@@ -12,6 +12,7 @@ export interface ChatRepository {
   getChatHistory(chatId: string): Promise<ChatDTO>;
   getChat(chatId: string): Promise<ChatDTO>;
   getAllChats(uid: string): Promise<ChatDTO[]>;
+  getAllMessages(chatId: string): Promise<ChatMessageDTO[]>;
 }
 
 export const chatRepository: ChatRepository = {
@@ -94,6 +95,23 @@ export const chatRepository: ChatRepository = {
         .collection('chats')
         .withConverter(ChatConverter)
         .where('uid', '==', uid)
+        .get();
+
+      const data = snapshot.docs.map((doc) => {
+        return doc.data();
+      });
+
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async getAllMessages(chatId: string): Promise<ChatMessageDTO[]> {
+    try {
+      const snapshot = await db
+        .collection('messages')
+        .withConverter(ChatMessageConverter)
+        .where('chatId', '==', chatId)
         .get();
 
       const data = snapshot.docs.map((doc) => {

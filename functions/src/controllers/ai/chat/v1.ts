@@ -12,7 +12,7 @@ const router = express.Router();
 router.use(cors({ origin: true }));
 
 router
-  .route('/chat')
+  .route('/')
   .post(
     checkInputLength,
     checkForInappropriateContent,
@@ -41,7 +41,7 @@ router
   );
 
 router
-  .route('/chat/:chatId/message')
+  .route('/:chatId/message')
   .post(
     checkInputLength,
     checkForInappropriateContent,
@@ -70,7 +70,22 @@ router
     }
   );
 router
-  .route('/chat/history')
+  .route('/:chatId/messages')
+  .get(async (req: express.Request, res: express.Response) => {
+    const chatId: string = req.params.chatId;
+    const uid: string = req.query.uid as string;
+    if (!uid || !chatId) throw new Error(statusCode.BAD_REQUEST);
+    console.log(`GET CHAT MESSAGES: ${chatId} ${uid}`);
+
+    try {
+      const responseMessage = await chatService.getAllMessages(chatId);
+      res.json({ response: responseMessage });
+    } catch (err) {
+      throw err;
+    }
+  });
+router
+  .route('/history')
   .get(async (req: express.Request, res: express.Response) => {
     const chatId: string = req.query.chatId as string;
     const uid: string = req.query.uid as string;
@@ -91,6 +106,7 @@ router
       throw err;
     }
   });
+
 router.use(require('@/middlewares/errors'));
 
 module.exports = router;

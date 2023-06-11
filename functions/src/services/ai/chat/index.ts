@@ -18,6 +18,7 @@ export interface ChatService {
 
   getChatHistory(uid: string, chatId?: string): Promise<ChatDTO | ChatDTO[]>;
   getAllChatHistories(uid: string): Promise<ChatDTO[]>;
+  getAllMessages(chatId: string): Promise<ChatMessageDTO[]>;
   validateUserChatAccess(uid: string, chatId: string): Promise<boolean>;
 }
 
@@ -102,6 +103,14 @@ export const chatService: ChatService = {
     try {
       const allChats = await chatRepository.getAllChats(uid);
       return allChats;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async getAllMessages(chatId: string): Promise<ChatMessageDTO[]> {
+    try {
+      const allMessages = await chatRepository.getAllMessages(chatId);
+      return allMessages;
     } catch (err) {
       throw err;
     }
