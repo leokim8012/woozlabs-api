@@ -95,6 +95,7 @@ export const chatRepository: ChatRepository = {
         .collection('chats')
         .withConverter(ChatConverter)
         .where('uid', '==', uid)
+        .orderBy('updatedAt', 'asc')
         .get();
 
       const data = snapshot.docs.map((doc) => {
@@ -112,6 +113,7 @@ export const chatRepository: ChatRepository = {
         .collection('messages')
         .withConverter(ChatMessageConverter)
         .where('chatId', '==', chatId)
+        .orderBy('createdAt', 'desc')
         .get();
 
       const data = snapshot.docs.map((doc) => {
