@@ -9,8 +9,8 @@ export interface ChatDTO {
   id: string;
   uid: string;
   title: string;
-  createdAt: firestore.Timestamp;
-  updatedAt: firestore.Timestamp;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ChatMessageDTO {
@@ -20,13 +20,27 @@ export interface ChatMessageDTO {
   status: IMessageStatus;
   role: IMessageRole;
   content: string;
-  createdAt: firestore.Timestamp;
-  updatedAt: firestore.Timestamp;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ChatConverter: firestore.FirestoreDataConverter<ChatDTO> = {
   toFirestore(chat: ChatDTO): firestore.DocumentData {
-    return { ...chat };
+    const createdAt =
+      typeof chat.createdAt === 'string'
+        ? new Date(chat.createdAt)
+        : chat.createdAt;
+    const updatedAt =
+      typeof chat.createdAt === 'string'
+        ? new Date(chat.createdAt)
+        : chat.createdAt;
+    return {
+      uid: chat.uid,
+      id: chat.id,
+      title: chat.title,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    };
   },
   fromFirestore(snapshot: firestore.QueryDocumentSnapshot): ChatDTO {
     const data = snapshot.data();
@@ -34,8 +48,8 @@ export const ChatConverter: firestore.FirestoreDataConverter<ChatDTO> = {
       id: data.id,
       uid: data.uid,
       title: data.title,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
+      createdAt: data.createdAt.toDate(),
+      updatedAt: data.updatedAt.toDate(),
     };
   },
 };
@@ -43,7 +57,25 @@ export const ChatConverter: firestore.FirestoreDataConverter<ChatDTO> = {
 export const ChatMessageConverter: firestore.FirestoreDataConverter<ChatMessageDTO> =
   {
     toFirestore(chatMessage: ChatMessageDTO): firestore.DocumentData {
-      return { ...chatMessage };
+      const createdAt =
+        typeof chatMessage.createdAt === 'string'
+          ? new Date(chatMessage.createdAt)
+          : chatMessage.createdAt;
+      const updatedAt =
+        typeof chatMessage.createdAt === 'string'
+          ? new Date(chatMessage.createdAt)
+          : chatMessage.createdAt;
+
+      return {
+        id: chatMessage.id,
+        chatId: chatMessage.chatId,
+        model: chatMessage.model,
+        status: chatMessage.status,
+        role: chatMessage.role,
+        content: chatMessage.content,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      };
     },
     fromFirestore(snapshot: firestore.QueryDocumentSnapshot): ChatMessageDTO {
       const data = snapshot.data();
@@ -54,8 +86,8 @@ export const ChatMessageConverter: firestore.FirestoreDataConverter<ChatMessageD
         status: data.status,
         role: data.role,
         content: data.content,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt,
+        createdAt: data.createdAt.toDate(),
+        updatedAt: data.updatedAt.toDate(),
       };
     },
   };

@@ -47,8 +47,8 @@ export const chatService: ChatService = {
       id: uuidv4(),
       uid: uid,
       title: 'New Chat',
-      createdAt: admin.firestore.Timestamp.fromDate(new Date()),
-      updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     const chatId = await chatRepository.createChat(chat);
 
@@ -79,13 +79,13 @@ export const chatService: ChatService = {
     const modelHandler = modelHandlers[model];
 
     const modelResponse = await modelHandler();
-    await chatRepository.sendMessage(message);
 
+    await chatRepository.sendMessage(message);
     const reponse: ChatMessageDTO = {
       chatId: chatId,
       content: modelResponse,
-      createdAt: admin.firestore.Timestamp.fromDate(new Date()),
-      updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       model: model,
       role: 'assistant',
       status: 'complete',
