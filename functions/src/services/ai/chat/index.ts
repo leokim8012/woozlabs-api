@@ -8,13 +8,13 @@ export interface ChatService {
     uid: string,
     model: IChatModel,
     message: ChatMessageDTO
-  ): Promise<string>;
+  ): Promise<ChatMessageDTO>;
   sendMessageToModel(
     uid: string,
     chatId: string,
     model: IChatModel,
     message: ChatMessageDTO
-  ): Promise<string>;
+  ): Promise<ChatMessageDTO>;
 
   getChatHistory(uid: string, chatId?: string): Promise<ChatDTO | ChatDTO[]>;
   getAllChatHistories(uid: string): Promise<ChatDTO[]>;
@@ -42,7 +42,7 @@ export const chatService: ChatService = {
     uid: string,
     model: IChatModel,
     message: ChatMessageDTO
-  ): Promise<string> {
+  ): Promise<ChatMessageDTO> {
     const chat: ChatDTO = {
       id: uuidv4(),
       uid: uid,
@@ -55,8 +55,13 @@ export const chatService: ChatService = {
     const updatedMessage = message;
     updatedMessage.chatId = chatId;
 
-    await this.sendMessageToModel(uid, chatId, model, updatedMessage);
-    return chatId;
+    const response = await this.sendMessageToModel(
+      uid,
+      chatId,
+      model,
+      updatedMessage
+    );
+    return response;
   },
 
   async sendMessageToModel(
@@ -64,7 +69,7 @@ export const chatService: ChatService = {
     chatId: string,
     model: IChatModel,
     message: ChatMessageDTO
-  ): Promise<string> {
+  ): Promise<ChatMessageDTO> {
     const hasAccess = await this.validateUserChatAccess(uid, chatId);
 
     if (!hasAccess) {
@@ -75,7 +80,19 @@ export const chatService: ChatService = {
 
     const modelResponse = await modelHandler();
     await chatRepository.sendMessage(message);
-    return modelResponse;
+
+    const reponse: ChatMessageDTO = {
+      chatId: chatId,
+      content: modelResponse,
+      createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+      updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
+      model: model,
+      role: 'assistant',
+      status: 'complete',
+      id: uuidv4(),
+    };
+    await chatRepository.sendMessage(reponse);
+    return reponse;
   },
 
   async getChatHistory(

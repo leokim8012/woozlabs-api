@@ -78,8 +78,8 @@ router
     console.log(`GET CHAT MESSAGES: ${chatId} ${uid}`);
 
     try {
-      const responseMessage = await chatService.getAllMessages(chatId);
-      res.json({ response: responseMessage });
+      const messages = await chatService.getAllMessages(chatId);
+      res.json({ messages: messages });
     } catch (err) {
       throw err;
     }
