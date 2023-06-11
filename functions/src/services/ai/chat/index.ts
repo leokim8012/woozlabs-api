@@ -51,7 +51,10 @@ export const chatService: ChatService = {
     };
     const chatId = await chatRepository.createChat(chat);
 
-    await this.sendMessageToModel(uid, chatId, model, message);
+    const updatedMessage = message;
+    updatedMessage.chatId = chatId;
+
+    await this.sendMessageToModel(uid, chatId, model, updatedMessage);
     return chatId;
   },
 
