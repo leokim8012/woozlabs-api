@@ -1,4 +1,5 @@
-import { ChatMessageDTO } from '@/models/ai/chat';
+import { ChatMessageDTO, IChatModel } from '@/models/ai/chat';
+import { statusCode } from '@/types/statusCode';
 import { Request, Response, NextFunction } from 'express';
 
 export function checkForInappropriateContent(
@@ -6,7 +7,14 @@ export function checkForInappropriateContent(
   res: Response,
   next: NextFunction
 ) {
-  const message: ChatMessageDTO = req.body.message;
+  const {
+    uid,
+    model,
+    message,
+  }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
+
+  if (!uid || !message || !model) throw new Error(statusCode.BAD_REQUEST);
+
   const forbiddenWords = ['badword1', 'badword2']; // Replace with real list
 
   for (let word of forbiddenWords) {

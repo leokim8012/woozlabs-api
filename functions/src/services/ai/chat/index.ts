@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { ChatDTO, ChatMessageDTO, IChatModel } from '@/models/ai/chat';
 import { chatRepository } from '@/repository/ai/chat';
 import admin from '@/plugins/firebase';
@@ -43,7 +43,7 @@ export const chatService: ChatService = {
     message: ChatMessageDTO
   ): Promise<string> {
     const chat: ChatDTO = {
-      id: uuid.v4(),
+      id: uuidv4(),
       uid: uid,
       title: 'New Chat',
       createdAt: admin.firestore.Timestamp.fromDate(new Date()),
