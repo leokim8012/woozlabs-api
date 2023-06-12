@@ -5,8 +5,8 @@
 #### Text response:
 
 The quick brown fox jumps over the lazy dog.
-Markdown table:
-markdown
+
+#### Markdown table:
 
 | Fruit    | Quantity | Price |
 | -------- | -------- | ----- |
