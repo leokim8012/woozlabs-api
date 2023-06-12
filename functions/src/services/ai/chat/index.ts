@@ -25,15 +25,15 @@ export interface ChatService {
 const modelHandlers: { [key in IChatModel]: () => Promise<string> } = {
   'gpt-3.5-turbo': async () => {
     // Call GPT-3.5 Turbo API here
-    return 'Response from GPT-3.5 Turbo';
+    return `GPT-3.5 Turbo\n${SAMPLE_RESPONSE}`;
   },
   'gpt-4': async () => {
     // Call GPT-4 API here
-    return 'Response from GPT-4';
+    return `GPT-4\n${SAMPLE_RESPONSE}`;
   },
   'palm-2': async () => {
     // Call PALM-2 API here
-    return 'Response from PALM-2';
+    return `PALM-2\n${SAMPLE_RESPONSE}`;
   },
 };
 
@@ -146,3 +146,50 @@ export const chatService: ChatService = {
     }
   },
 };
+
+
+
+const SAMPLE_RESPONSE = 
+`Sure, here are some random responses in a variety of formats:
+
+Text response:
+sql
+Copy code
+The quick brown fox jumps over the lazy dog.
+Markdown table:
+markdown
+
+| Fruit      | Quantity | Price  |
+| -----------| -------- | ------ |
+| Apples     | 50       | $0.5   |
+| Bananas    | 100      | $0.25  |
+| Cherries   | 200      | $1     |
+Code block:
+
+```python
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("world")
+```
+
+Bulleted list:
+
+- Item 1
+- Item 2
+- Item 3
+
+Numbered list:
+markdown
+Copy code
+1. First item
+2. Second item
+3. Third item
+Link:
+[Visit OpenAI!](https://openai.com)
+Image:
+![OpenAI logo](https://openai.com/content/images/2019/12/openai-cover.png)
+Quote:
+> This is a blockquote.
+These are just examples. Depending on what you need to test, you may want to create other types of content.
+`
