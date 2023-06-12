@@ -22,3 +22,5 @@ export async function sendPrompt(
 
   return completion.data;
 }
+
+export async function stopPromt(id: string) {}
