@@ -39,6 +39,7 @@ jobs:
           cd functions
           echo "ENVIRONMENT=production" >> .env
           echo "STORAGE_BUCKET=${{ secrets.PROD_STORAGE_BUCKET }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
           cat .env
           cd ..
       - name: Build production

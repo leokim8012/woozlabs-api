@@ -40,6 +40,7 @@ jobs:
           cd functions
           echo "ENVIRONMENT=development" >> .env
           echo "STORAGE_BUCKET=${{ secrets.DEV_STORAGE_BUCKET }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
           cat .env
           cd ..
       - name: Build production
@@ -48,6 +49,21 @@ jobs:
           npm run build
           cd ..
           npm run build
+
+      - name: Extract function names from commit message
+        id: extract-func-names
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1)
+          echo "Commit message: $COMMIT_MSG"
+          if [[ $COMMIT_MSG == *"--functions:"* ]]; then
+            FUNCTION_NAMES=$(echo $COMMIT_MSG | awk -F "--functions:" '{print $2}' | tr -d ' ' | tr ',' '\n')
+            FUNCTION_COMMAND=$(echo $FUNCTION_NAMES | sed 's/^/functions:/g' | tr '\n' ',')
+            echo "Function commands: $FUNCTION_COMMAND"
+            echo "::set-output name=function-commands::$FUNCTION_COMMAND"
+          else
+            echo "No functions specified in commit message."
+            echo "::set-output name=function-commands::"
+          fi
 
       - name: Check Firebase tools
         run: npx firebase-tools
@@ -58,7 +74,14 @@ jobs:
         run: npx firebase-tools use default
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      - name: Deploy Firebase
-        run: npx firebase-tools deploy --only storage,firestore,hosting:api,functions
+
+      - name: Deploy Firebase elements and functions
+        run: |
+          DEPLOY_COMMAND="npx firebase-tools deploy --only storage,firestore,hosting:api"
+          if [[ -n "${{ steps.extract-func-names.outputs.function-commands }}" ]]; then
+            DEPLOY_COMMAND="$DEPLOY_COMMAND,${{ steps.extract-func-names.outputs.function-commands }}"
+          fi
+          echo "Running command: $DEPLOY_COMMAND"
+          $DEPLOY_COMMAND
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
