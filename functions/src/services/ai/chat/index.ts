@@ -187,10 +187,6 @@ greet("world")
    Link:
    [Visit Apple!](https://apple.com)
 
-
-#### Image:
-![Apple logo](https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg)
-
 #### Quote:
    > This is a blockquote.
    > These are just examples. Depending on what you need to test, you may want to create other types of content.
