@@ -56,19 +56,14 @@ jobs:
           COMMIT_MSG=$(git log --format=%B -n 1)
           echo "Commit message: $COMMIT_MSG"
           if [[ $COMMIT_MSG == *"--functions:"* ]]; then
-            FUNCTION_NAMES=$(echo $COMMIT_MSG | awk -F "--functions:" '{print $2}' | tr -d ' ' | tr ',' '\n')
-            FUNCTION_COMMAND=$(echo $FUNCTION_NAMES | sed 's/^/functions:/g' | tr '\n' ',')
+            FUNCTION_NAMES=$(echo $COMMIT_MSG | awk -F "--functions:" '{print $2}' | tr -d ' ')
+            FUNCTION_COMMAND=$(echo $FUNCTION_NAMES | tr ',' '\n' | awk '{print "functions:"$1}' | paste -sd "," -)
             echo "Function commands: $FUNCTION_COMMAND"
             echo "::set-output name=function-commands::$FUNCTION_COMMAND"
           else
             echo "No functions specified in commit message."
             echo "::set-output name=function-commands::"
           fi
-
-      - name: Check Firebase tools
-        run: npx firebase-tools
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Target Firebase
         run: npx firebase-tools use default
