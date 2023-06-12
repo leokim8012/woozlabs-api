@@ -1,8 +1,9 @@
-"Sure, here are some random responses in a variety of formats:
+### Random responses in a variety of formats
 
-Text response:
-sql
-Copy code
+---
+
+#### Text response:
+
 The quick brown fox jumps over the lazy dog.
 Markdown table:
 markdown
@@ -13,7 +14,7 @@ markdown
 | Bananas  | 100      | $0.25 |
 | Cherries | 200      | $1    |
 
-Code block:
+#### Code block:
 
 ```python
 def greet(name):
@@ -22,24 +23,25 @@ def greet(name):
 greet("world")
 ```
 
-Bulleted list:
+#### Bulleted list:
 
 - Item 1
 - Item 2
 - Item 3
 
-Numbered list:
-markdown
-Copy code
+#### Numbered list:
 
 1. First item
 2. Second item
 3. Third item
    Link:
-   [Visit OpenAI!](https://openai.com)
-   Image:
-   ![OpenAI logo](https://openai.com/content/images/2019/12/openai-cover.png)
-   Quote:
-   > This is a blockquote.
-   > These are just examples. Depending on what you need to test, you may want to create other types of content.
-   > "
+   [Visit Apple!](https://apple.com)
+
+#### Image:
+
+![Apple logo](https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg)
+
+#### Quote:
+
+> This is a blockquote.
+> These are just examples. Depending on what you need to test, you may want to create other types of content.
