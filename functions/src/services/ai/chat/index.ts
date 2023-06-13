@@ -58,7 +58,7 @@ const modelHandlers: {
     // Call PALM-2 API here
     const sampleResponse: ChatMessageDTO = {
       chatId: '',
-      content: `PALM-2\n${SAMPLE_RESPONSE}`,
+      content: `${SAMPLE_RESPONSE2}`,
       id: '',
       model: 'palm-2',
       role: 'model',
@@ -215,4 +215,26 @@ greet("world")
    > This is a blockquote.
    > These are just examples. Depending on what you need to test, you may want to create other types of content.
    > 
+`;
+
+const SAMPLE_RESPONSE2 = `
+There are a number of potential solutions to mitigate the impact of climate change on photosynthesis. These include:
+
+- **Reducing greenhouse gas emissions:** This is the most important step in mitigating climate change, as it will reduce the overall level of stress on plants and ecosystems.
+- **Improving plant health:** This can be done through a variety of measures, such as improving soil health, providing adequate water and nutrients, and managing pests and diseases.
+- **Selecting and breeding climate-resilient plants:** This involves identifying and developing plant varieties that are better able to tolerate the stresses of climate change, such as drought, heat, and flooding.
+- **Restoring and protecting natural ecosystems:** Natural ecosystems, such as forests and wetlands, play an important role in regulating the climate and providing habitat for plants and animals. By restoring and protecting these ecosystems, we can help to mitigate the impact of climate change on photosynthesis.
+- **Developing new technologies:** There is a growing field of research into new technologies that could help to mitigate the impact of climate change on photosynthesis. These include artificial photosynthesis, which could be used to remove carbon dioxide from the atmosphere, and genetically modified plants that are more resistant to climate change.
+
+It is important to note that there is no single solution that will be effective in mitigating the impact of climate change on photosynthesis. A combination of approaches will be necessary to address this complex challenge.
+
+Here are some additional details about each of these potential solutions:
+
+- **Reducing greenhouse gas emissions:** Greenhouse gases trap heat in the atmosphere, which is causing the planet to warm. Reducing greenhouse gas emissions will help to slow the rate of climate change and reduce the overall stress on plants and ecosystems.
+- **Improving plant health:** Healthy plants are better able to tolerate the stresses of climate change. There are a number of things that can be done to improve plant health, such as improving soil health, providing adequate water and nutrients, and managing pests and diseases.
+- **Selecting and breeding climate-resilient plants:** There are a number of plant varieties that are better able to tolerate the stresses of climate change, such as drought, heat, and flooding. By selecting and breeding these varieties, we can help to ensure that plants are able to continue to photosynthesize and produce food in a changing climate.
+- **Restoring and protecting natural ecosystems:** Natural ecosystems, such as forests and wetlands, play an important role in regulating the climate and providing habitat for plants and animals. By restoring and protecting these ecosystems, we can help to mitigate the impact of climate change on photosynthesis.
+- **Developing new technologies:** There is a growing field of research into new technologies that could help to mitigate the impact of climate change on photosynthesis. These include artificial photosynthesis, which could be used to remove carbon dioxide from the atmosphere, and genetically modified plants that are more resistant to climate change.
+
+It is important to note that there is no single solution that will be effective in mitigating the impact of climate change on photosynthesis. A combination of approaches will be necessary to address this complex challenge.
 `;
