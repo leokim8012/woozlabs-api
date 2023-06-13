@@ -25,6 +25,7 @@
     "firebase-functions": "^3.18.0",
     "module-alias": "^2.2.2",
     "node-html-parser": "^6.0.0",
+    "openai": "^3.2.1",
     "pluralize": "^8.0.0",
     "request": "^2.88.2",
     "sitemap": "^7.1.1",
