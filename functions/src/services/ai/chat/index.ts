@@ -1,7 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ChatDTO, ChatMessageDTO, IChatModel } from '@/models/ai/chat';
+import {
+  ChatDTO,
+  ChatMessageDTO,
+  ChatMessageDTOToGPT,
+  GPTResponseToChatMessageDTO,
+  IChatModel,
+} from '@/models/ai/chat';
 import { chatRepository } from '@/repository/ai/chat';
 import admin from '@/plugins/firebase';
+import { sendPrompt } from '@/plugins/openai';
 
 export interface ChatService {
   startChatWithModel(
@@ -13,7 +20,7 @@ export interface ChatService {
     uid: string,
     chatId: string,
     model: IChatModel,
-    message: ChatMessageDTO
+    messages: ChatMessageDTO[]
   ): Promise<ChatMessageDTO>;
 
   getChatHistory(uid: string, chatId?: string): Promise<ChatDTO | ChatDTO[]>;
@@ -22,18 +29,48 @@ export interface ChatService {
   validateUserChatAccess(uid: string, chatId: string): Promise<boolean>;
 }
 
-const modelHandlers: { [key in IChatModel]: () => Promise<string> } = {
-  'gpt-3.5-turbo': async () => {
+const modelHandlers: {
+  [key in IChatModel]: (messages: ChatMessageDTO[]) => Promise<ChatMessageDTO>;
+} = {
+  'gpt-3.5-turbo': async (messages: ChatMessageDTO[]) => {
     // Call GPT-3.5 Turbo API here
-    return `GPT-3.5 Turbo\n${SAMPLE_RESPONSE}`;
+
+    const modelResponse = await sendPrompt(
+      'gpt-3.5-turbo',
+      messages.map((message) => ChatMessageDTOToGPT(message))
+    );
+
+    const response = GPTResponseToChatMessageDTO(modelResponse);
+    return response;
   },
-  'gpt-4': async () => {
+  'gpt-4': async (messages: ChatMessageDTO[]) => {
     // Call GPT-4 API here
-    return `GPT-4\n${SAMPLE_RESPONSE}`;
+
+    const sampleResponse: ChatMessageDTO = {
+      chatId: '',
+      content: `GPT-4\n${SAMPLE_RESPONSE}`,
+      id: '',
+      model: 'gpt-4',
+      role: 'model',
+      status: 'complete',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return sampleResponse;
   },
-  'palm-2': async () => {
+  'palm-2': async (messages: ChatMessageDTO[]) => {
     // Call PALM-2 API here
-    return `PALM-2\n${SAMPLE_RESPONSE}`;
+    const sampleResponse: ChatMessageDTO = {
+      chatId: '',
+      content: `PALM-2\n${SAMPLE_RESPONSE}`,
+      id: '',
+      model: 'palm-2',
+      role: 'model',
+      status: 'complete',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return sampleResponse;
   },
 };
 
@@ -55,12 +92,9 @@ export const chatService: ChatService = {
     const updatedMessage = message;
     updatedMessage.chatId = chatId;
 
-    const response = await this.sendMessageToModel(
-      uid,
-      chatId,
-      model,
-      updatedMessage
-    );
+    const response = await this.sendMessageToModel(uid, chatId, model, [
+      updatedMessage,
+    ]);
     return response;
   },
 
@@ -68,8 +102,10 @@ export const chatService: ChatService = {
     uid: string,
     chatId: string,
     model: IChatModel,
-    message: ChatMessageDTO
+    messages: ChatMessageDTO[]
   ): Promise<ChatMessageDTO> {
+    if (messages.length) throw new Error('Empty message');
+
     const hasAccess = await this.validateUserChatAccess(uid, chatId);
 
     if (!hasAccess) {
@@ -78,21 +114,13 @@ export const chatService: ChatService = {
 
     const modelHandler = modelHandlers[model];
 
-    const modelResponse = await modelHandler();
+    const modelResponse = await modelHandler(messages);
+    await chatRepository.sendMessage(messages[messages.length - 1]);
+    modelResponse.chatId = chatId;
+    if (modelResponse.id == '') modelResponse.id = uuidv4();
 
-    await chatRepository.sendMessage(message);
-    const reponse: ChatMessageDTO = {
-      chatId: chatId,
-      content: modelResponse,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      model: model,
-      role: 'assistant',
-      status: 'complete',
-      id: uuidv4(),
-    };
-    await chatRepository.sendMessage(reponse);
-    return reponse;
+    await chatRepository.sendMessage(modelResponse);
+    return modelResponse;
   },
 
   async getChatHistory(

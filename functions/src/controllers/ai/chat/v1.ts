@@ -49,8 +49,9 @@ router
       const {
         uid,
         model,
-        message,
-      }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
+        messages,
+      }: { uid: string; model: IChatModel; messages: ChatMessageDTO[] } =
+        req.body;
       const chatId: string = req.params.chatId;
 
       if (!uid || !chatId || !model) throw new Error(statusCode.BAD_REQUEST);
@@ -61,7 +62,7 @@ router
           uid,
           chatId,
           model,
-          message
+          messages
         );
         res.json({ response: responseMessage });
       } catch (err) {
@@ -69,6 +70,7 @@ router
       }
     }
   );
+
 router
   .route('/:chatId/messages')
   .get(async (req: express.Request, res: express.Response) => {
