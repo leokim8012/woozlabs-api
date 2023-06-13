@@ -58,7 +58,7 @@ const modelHandlers: {
     // Call PALM-2 API here
     const sampleResponse: ChatMessageDTO = {
       chatId: '',
-      content: `${SAMPLE_RESPONSE2}`,
+      content: `${SAMPLE_RESPONSE1}`,
       id: '',
       model: 'palm-2',
       role: 'model',
@@ -170,7 +170,7 @@ export const chatService: ChatService = {
     }
   },
 };
-const SAMPLE_RESPONSE = `
+const SAMPLE_RESPONSE1 = `
 ### Random responses in a variety of formats
 ----
 
