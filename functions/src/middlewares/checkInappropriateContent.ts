@@ -11,15 +11,35 @@ export function checkForInappropriateContent(
     uid,
     model,
     message,
-  }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
+    messages,
+  }: {
+    uid: string;
+    model: IChatModel;
+    message?: ChatMessageDTO;
+    messages?: ChatMessageDTO[];
+  } = req.body;
 
-  if (!uid || !message || !model) throw new Error(statusCode.BAD_REQUEST);
+  if (!uid || !model) throw new Error(statusCode.BAD_REQUEST);
 
   const forbiddenWords = ['badword1', 'badword2']; // Replace with real list
 
-  for (let word of forbiddenWords) {
-    if (message.content.includes(word)) {
-      res.status(400).json({ error: 'Inappropriate content found.' });
+  let contentsToCheck: string[] = [];
+
+  if (message) {
+    // Single message case
+    contentsToCheck.push(message.content);
+  } else if (messages && Array.isArray(messages)) {
+    // Array of messages case
+    contentsToCheck = messages.map((msg) => msg.content);
+  } else {
+    throw new Error(statusCode.BAD_REQUEST);
+  }
+
+  for (let content of contentsToCheck) {
+    for (let word of forbiddenWords) {
+      if (content.includes(word)) {
+        res.status(400).json({ error: 'Inappropriate content found.' });
+      }
     }
   }
   next();

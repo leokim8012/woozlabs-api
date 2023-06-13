@@ -11,14 +11,32 @@ export function checkInputLength(
     uid,
     model,
     message,
-  }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
+    messages,
+  }: {
+    uid: string;
+    model: IChatModel;
+    message?: ChatMessageDTO;
+    messages?: ChatMessageDTO[];
+  } = req.body;
 
-  if (!uid || !message || !model) throw new Error(statusCode.BAD_REQUEST);
+  if (!uid || !model) throw new Error(statusCode.BAD_REQUEST);
 
-  if (message.content.length > 2048) {
-    // 2048 is just an example, replace it with the actual limit
-    res.status(400).json({ error: 'Input is too long.' });
+  if (message) {
+    // Single message case
+    if (message.content.length > 2048) {
+      // 2048 is just an example, replace it with the actual limit
+      res.status(400).json({ error: 'Input is too long.' });
+    }
+  } else if (messages && Array.isArray(messages)) {
+    // Array of messages case
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.content.length > 2048) {
+      // Check last message length
+      res.status(400).json({ error: 'Input is too long.' });
+    }
   } else {
-    next();
+    throw new Error(statusCode.BAD_REQUEST);
   }
+
+  next();
 }
