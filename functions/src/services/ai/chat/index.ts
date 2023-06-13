@@ -104,7 +104,7 @@ export const chatService: ChatService = {
     model: IChatModel,
     messages: ChatMessageDTO[]
   ): Promise<ChatMessageDTO> {
-    if (messages.length) throw new Error('Empty message');
+    if (messages.length == 0) throw new Error('Empty message');
 
     const hasAccess = await this.validateUserChatAccess(uid, chatId);
 
