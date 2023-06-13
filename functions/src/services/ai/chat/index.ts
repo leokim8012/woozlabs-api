@@ -46,17 +46,13 @@ const modelHandlers: {
   'gpt-4': async (messages: ChatMessageDTO[]) => {
     // Call GPT-4 API here
 
-    const sampleResponse: ChatMessageDTO = {
-      chatId: '',
-      content: `GPT-4\n${SAMPLE_RESPONSE}`,
-      id: '',
-      model: 'gpt-4',
-      role: 'model',
-      status: 'complete',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    return sampleResponse;
+    const modelResponse = await sendPrompt(
+      'gpt-4',
+      messages.map((message) => ChatMessageDTOToGPT(message))
+    );
+
+    const response = GPTResponseToChatMessageDTO(modelResponse);
+    return response;
   },
   'palm-2': async (messages: ChatMessageDTO[]) => {
     // Call PALM-2 API here

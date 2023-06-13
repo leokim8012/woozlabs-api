@@ -41,26 +41,6 @@ export interface ChatModelResponse {
   updatedAt: Date;
 }
 
-// {
-//   "id": "chatcmpl-6qhMHZvFBoFW13dvUQ3aOr9Fc2lxU",
-//   "object": "chat.completion",
-//   "created": 1678017745,
-//   "model": "gpt-3.5-turbo-0301",
-//   "usage": {
-//     "prompt_tokens": 48,
-//     "completion_tokens": 69,
-//     "total_tokens": 117
-//   },
-//   "choices": [{
-//       "message": {
-//         "role": "assistant",
-//         "content": "저는 프로그램으로 작동하는 인공지능이므로 감정을 가지지 않습니다. 단지, 제작된 프로그램에서 한국어를 인식하고 대화를 할 수 있도록 프로그래밍 되었습니다."
-//       },
-//       "finish_reason": "stop",
-//       "index": 0
-//   }]
-// }
-
 export const ChatConverter: firestore.FirestoreDataConverter<ChatDTO> = {
   toFirestore(chat: ChatDTO): firestore.DocumentData {
     const createdAt =
