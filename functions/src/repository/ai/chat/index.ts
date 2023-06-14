@@ -13,6 +13,7 @@ export interface ChatRepository {
   getChat(chatId: string): Promise<ChatDTO>;
   getAllChats(uid: string): Promise<ChatDTO[]>;
   getAllMessages(chatId: string): Promise<ChatMessageDTO[]>;
+  deleteChat(chatId: string): Promise<void>;
 }
 
 export const chatRepository: ChatRepository = {
@@ -25,6 +26,13 @@ export const chatRepository: ChatRepository = {
         .set(chat);
 
       return chat.id;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async deleteChat(chatId: string): Promise<void> {
+    try {
+      await db.collection('chats').doc(chatId).delete();
     } catch (err) {
       throw err;
     }

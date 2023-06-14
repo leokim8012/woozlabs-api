@@ -27,6 +27,8 @@ export interface ChatService {
   getAllChatHistories(uid: string): Promise<ChatDTO[]>;
   getAllMessages(chatId: string): Promise<ChatMessageDTO[]>;
   validateUserChatAccess(uid: string, chatId: string): Promise<boolean>;
+
+  deleteHistory(uid: string, chatId: string): Promise<void>;
 }
 
 const modelHandlers: {
@@ -156,6 +158,20 @@ export const chatService: ChatService = {
       throw err;
     }
   },
+  async deleteHistory(uid: string, chatId: string): Promise<void> {
+    try {
+      const hasAccess = await this.validateUserChatAccess(uid, chatId);
+      if (!hasAccess) {
+        throw new Error("User doesn't have access to the chat.");
+      }
+
+      await chatRepository.deleteChat(chatId);
+
+      return;
+    } catch (err) {
+      throw err;
+    }
+  },
 
   async validateUserChatAccess(uid: string, chatId: string): Promise<boolean> {
     try {
@@ -170,6 +186,7 @@ export const chatService: ChatService = {
     }
   },
 };
+
 const SAMPLE_RESPONSE1 = `
 ### Random responses in a variety of formats
 ----
