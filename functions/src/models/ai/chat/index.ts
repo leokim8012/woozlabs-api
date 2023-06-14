@@ -139,7 +139,7 @@ export function GPTResponseToChatMessageDTO(
   // Assuming the first choice is the desired one.
   const message = response.choices[0].message;
 
-  if (!message) {
+  if (!message || !message.content) {
     throw new Error('Response Error Occurred');
   }
 
