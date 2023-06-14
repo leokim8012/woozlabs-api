@@ -113,13 +113,12 @@ router
 router
   .route('/:chatId')
   .delete(async (req: express.Request, res: express.Response) => {
-    const chatId: string = req.params.chatId as string;
+    const chatId = req.params.chatId;
     const { uid }: { uid: string } = req.body;
     if (!uid || !chatId) throw new Error(statusCode.BAD_REQUEST);
     console.log(`DELETE CHAT HISTORY: ${uid} | ${chatId}`);
     try {
       let chatHistory;
-      // Fetch history for specific chatId
       await chatService.getChatHistory(uid, chatId);
       res.sendStatus(200);
     } catch (err) {
