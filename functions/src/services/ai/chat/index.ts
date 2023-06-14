@@ -60,6 +60,7 @@ const modelHandlers: {
     // Call PALM-2 API here
     const sampleResponse: ChatMessageDTO = {
       chatId: '',
+      uid: '',
       content: `${SAMPLE_RESPONSE1}`,
       id: '',
       model: 'palm-2',
@@ -115,6 +116,7 @@ export const chatService: ChatService = {
     const modelResponse = await modelHandler(messages);
     await chatRepository.sendMessage(messages[messages.length - 1]);
     modelResponse.chatId = chatId;
+    modelResponse.uid = uid;
     if (modelResponse.id == '') modelResponse.id = uuidv4();
 
     await chatRepository.sendMessage(modelResponse);

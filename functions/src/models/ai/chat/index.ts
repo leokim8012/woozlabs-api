@@ -22,6 +22,7 @@ export interface ChatDTO {
 
 export interface ChatMessageDTO {
   id: string;
+  uid: string;
   chatId: string;
   model: IChatModel;
   status: IMessageStatus;
@@ -85,6 +86,7 @@ export const ChatMessageConverter: firestore.FirestoreDataConverter<ChatMessageD
 
       return {
         id: chatMessage.id,
+        uid: chatMessage.uid,
         chatId: chatMessage.chatId,
         model: chatMessage.model,
         status: chatMessage.status,
@@ -98,6 +100,7 @@ export const ChatMessageConverter: firestore.FirestoreDataConverter<ChatMessageD
       const data = snapshot.data();
       return {
         id: data.id,
+        uid: data.uid,
         chatId: data.chatId,
         model: data.model,
         status: data.status,
@@ -152,6 +155,7 @@ export function GPTResponseToChatMessageDTO(
 
   return {
     id: response.id, // Use the ID from the response
+    uid: '',
     chatId: '', // Generate a chatId or get from another source
     model: response.model as IChatModel,
     content: message.content,
