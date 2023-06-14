@@ -44,7 +44,7 @@ router
   .route('/:chatId')
   .delete(async (req: express.Request, res: express.Response) => {
     const chatId: string = req.params.chatId;
-    const { uid }: { uid: string } = req.body;
+    const uid: string = req.query.uid as string;
 
     if (!uid || !chatId) throw new Error(statusCode.BAD_REQUEST);
     console.log(`DELETE CHAT HISTORY: ${uid} | ${chatId}`);
