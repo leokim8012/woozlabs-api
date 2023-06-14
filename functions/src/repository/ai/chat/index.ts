@@ -21,8 +21,8 @@ export const chatRepository: ChatRepository = {
     try {
       await db
         .collection('chats')
-        .doc(chat.id)
         .withConverter(ChatConverter)
+        .doc(chat.id)
         .set(chat);
 
       return chat.id;
@@ -32,7 +32,11 @@ export const chatRepository: ChatRepository = {
   },
   async deleteChat(chatId: string): Promise<void> {
     try {
-      await db.collection('chats').doc(chatId).delete();
+      await db
+        .collection('chats')
+        .withConverter(ChatConverter)
+        .doc(chatId)
+        .delete();
     } catch (err) {
       throw err;
     }
