@@ -68,7 +68,7 @@ router
         const options: CookieOptions = {
           maxAge: expiresIn,
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: 'none',
           domain: '.woozlabs.com',
         };
