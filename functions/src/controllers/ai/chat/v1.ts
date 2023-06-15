@@ -44,6 +44,23 @@ router
       throw err;
     }
   });
+router
+  .route('/:chatId/updateTitle')
+  .post(async (req: express.Request, res: express.Response) => {
+    const chatId: string = req.params.chatId;
+    const uid: string = req.query.uid as string;
+    const title: string = req.query.title as string;
+
+    if (!uid || !chatId || !title) throw new Error(statusCode.BAD_REQUEST);
+    console.log(`EDIT CHAT TITLE: ${uid} | ${chatId} | ${title}`);
+    try {
+      let chatHistory;
+      await chatService.updateChatTitle(uid, chatId, title);
+      res.sendStatus(200);
+    } catch (err) {
+      throw err;
+    }
+  });
 
 router
   .route('/:chatId/message')

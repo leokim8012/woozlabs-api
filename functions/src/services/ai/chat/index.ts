@@ -30,6 +30,7 @@ export interface ChatService {
   validateUserChatAccess(uid: string, chatId: string): Promise<boolean>;
 
   deleteHistory(uid: string, chatId: string): Promise<void>;
+  updateChatTitle(uid: string, chatId: string, title: string): Promise<void>;
 }
 
 const modelHandlers: {
@@ -181,6 +182,25 @@ export const chatService: ChatService = {
       }
 
       await chatRepository.deleteChat(chatId);
+
+      return;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async updateChatTitle(
+    uid: string,
+    chatId: string,
+    title: string
+  ): Promise<void> {
+    try {
+      const hasAccess = await this.validateUserChatAccess(uid, chatId);
+      if (!hasAccess) {
+        throw new Error("User doesn't have access to the chat.");
+      }
+
+      await chatRepository.updateChatTitle(chatId, title);
 
       return;
     } catch (err) {

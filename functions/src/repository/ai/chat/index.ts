@@ -14,6 +14,7 @@ export interface ChatRepository {
   getAllChats(uid: string): Promise<ChatDTO[]>;
   getAllMessages(chatId: string): Promise<ChatMessageDTO[]>;
   deleteChat(chatId: string): Promise<void>;
+  updateChatTitle(chatId: string, title: string): Promise<void>;
 }
 
 export const chatRepository: ChatRepository = {
@@ -37,6 +38,17 @@ export const chatRepository: ChatRepository = {
         .withConverter(ChatConverter)
         .doc(chatId)
         .delete();
+    } catch (err) {
+      throw err;
+    }
+  },
+  async updateChatTitle(chatId: string, title: string): Promise<void> {
+    try {
+      await db
+        .collection('chats')
+        .withConverter(ChatConverter)
+        .doc(chatId)
+        .update('title', title);
     } catch (err) {
       throw err;
     }
