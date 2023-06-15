@@ -11,11 +11,12 @@ import admin from '@/plugins/firebase';
 import { sendPrompt } from '@/plugins/openai';
 
 export interface ChatService {
-  startChatWithModel(
-    uid: string,
-    model: IChatModel,
-    message: ChatMessageDTO
-  ): Promise<ChatMessageDTO>;
+  createNewChat(uid: string, model: IChatModel): Promise<string>;
+  // startChatWithModel(
+  //   uid: string,
+  //   model: IChatModel,
+  //   message: ChatMessageDTO
+  // ): Promise<ChatMessageDTO>;
   sendMessageToModel(
     uid: string,
     chatId: string,
@@ -74,11 +75,7 @@ const modelHandlers: {
 };
 
 export const chatService: ChatService = {
-  async startChatWithModel(
-    uid: string,
-    model: IChatModel,
-    message: ChatMessageDTO
-  ): Promise<ChatMessageDTO> {
+  async createNewChat(uid: string, model: IChatModel): Promise<string> {
     const chat: ChatDTO = {
       id: uuidv4(),
       uid: uid,
@@ -87,15 +84,31 @@ export const chatService: ChatService = {
       updatedAt: new Date(),
     };
     const chatId = await chatRepository.createChat(chat);
-
-    const updatedMessage = message;
-    updatedMessage.chatId = chatId;
-
-    const response = await this.sendMessageToModel(uid, chatId, model, [
-      updatedMessage,
-    ]);
-    return response;
+    return chatId;
   },
+
+  // async startChatWithModel(
+  //   uid: string,
+  //   model: IChatModel,
+  //   message: ChatMessageDTO
+  // ): Promise<ChatMessageDTO> {
+  //   const chat: ChatDTO = {
+  //     id: uuidv4(),
+  //     uid: uid,
+  //     title: 'New Chat',
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //   };
+  //   const chatId = await chatRepository.createChat(chat);
+
+  //   const updatedMessage = message;
+  //   updatedMessage.chatId = chatId;
+
+  //   const response = await this.sendMessageToModel(uid, chatId, model, [
+  //     updatedMessage,
+  //   ]);
+  //   return response;
+  // },
 
   async sendMessageToModel(
     uid: string,

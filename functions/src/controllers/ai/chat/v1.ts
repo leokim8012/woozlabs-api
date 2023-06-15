@@ -12,33 +12,21 @@ const router = express.Router();
 router.use(cors({ origin: true }));
 
 router
-  .route('/')
-  .post(
-    checkInputLength,
-    checkForInappropriateContent,
-    async (req: express.Request, res: express.Response) => {
-      const {
-        uid,
-        model,
-        message,
-      }: { uid: string; model: IChatModel; message: ChatMessageDTO } = req.body;
+  .route('/newChat')
+  .post(async (req: express.Request, res: express.Response) => {
+    const { uid, model }: { uid: string; model: IChatModel } = req.body;
 
-      if (!uid || !message || !model) throw new Error(statusCode.BAD_REQUEST);
+    if (!uid || !model) throw new Error(statusCode.BAD_REQUEST);
 
-      console.log(`SEND CHAT MESSAGE: ${model} ${uid}`);
+    console.log(`NEW CHAT: ${model} ${uid}`);
 
-      try {
-        const responseMessage = await chatService.startChatWithModel(
-          uid,
-          model,
-          message
-        );
-        res.status(201).json({ response: responseMessage });
-      } catch (err) {
-        throw err;
-      }
+    try {
+      const chat_id = await chatService.createNewChat(uid, model);
+      res.status(201).json({ chat_id: chat_id });
+    } catch (err) {
+      throw err;
     }
-  );
+  });
 
 router
   .route('/:chatId')
@@ -50,7 +38,7 @@ router
     console.log(`DELETE CHAT HISTORY: ${uid} | ${chatId}`);
     try {
       let chatHistory;
-      await chatService.getChatHistory(uid, chatId);
+      await chatService.deleteHistory(uid, chatId);
       res.sendStatus(200);
     } catch (err) {
       throw err;
