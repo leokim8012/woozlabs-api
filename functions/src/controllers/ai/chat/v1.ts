@@ -44,6 +44,7 @@ router
       throw err;
     }
   });
+
 router
   .route('/:chatId/updateTitle')
   .post(async (req: express.Request, res: express.Response) => {
